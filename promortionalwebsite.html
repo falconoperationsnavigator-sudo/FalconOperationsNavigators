@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>F.A.L.C.O.N</title>
+
+  <link rel="stylesheet"
+href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- FAVICON FIX -->
+  <link rel="icon" type="image/png" href="falconnavigator2.png">
+  <link rel="shortcut icon" type="image/png" href="falconnavigator2.png">
+
+<!-- ADD THIS INSIDE <head> -->
+
+<!-- AOS ANIMATION -->
+<link rel="stylesheet"
+href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
+
+<!-- PARTICLES -->
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+<style>
+
+/* LOADING SCREEN */
+#loader{
+position:fixed;
+inset:0;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:99999;
+flex-direction:column;
+transition:opacity 5s ease;
+}
+
+.loader-text{
+font-size:3rem;
+font-weight:900;
+color:#ef4444;
+animation:pulseLoader 1.5s infinite alternate;
+letter-spacing:4px;
+}
+
+@keyframes pulseLoader{
+from{
+opacity:.5;
+transform:scale(1);
+}
+to{
+opacity:1;
+transform:scale(1.1);
+text-shadow:0 0 30px red;
+}
+}
+
+/* PARTICLES */
+#tsparticles{
+position:fixed;
+inset:0;
+z-index:-1;
+}
+
+/* GALLERY LIGHTBOX */
+#lightbox{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.95);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:99999;
+}
+
+#lightbox img{
+max-width:90%;
+max-height:90%;
+border-radius:20px;
+border:2px solid rgba(255,0,0,.3);
+}
+
+/* TOOLTIP */
+.tooltip{
+position:absolute;
+bottom:110%;
+left:50%;
+transform:translateX(-50%);
+background:black;
+padding:8px 14px;
+border:1px solid rgba(255,0,0,.3);
+border-radius:10px;
+font-size:12px;
+white-space:nowrap;
+opacity:0;
+pointer-events:none;
+transition:.3s;
+}
+
+.group:hover .tooltip{
+opacity:1;
+}
+
+/* MOBILE MENU ANIMATION */
+#mobile-menu{
+transition:all .4s ease;
+}
+
+/* STATUS PANEL */
+.status-dot{
+width:10px;
+height:10px;
+border-radius:999px;
+background:#22c55e;
+box-shadow:0 0 10px #22c55e;
+animation:pulse 1.5s infinite;
+}
+
+/* TYPING EFFECT */
+.typing{
+border-right:3px solid red;
+white-space:nowrap;
+overflow:hidden;
+width:0;
+animation:typing 4s steps(40,end) forwards,
+blink .8s infinite;
+}
+
+@keyframes typing{
+from{width:0}
+to{width:100%}
+}
+
+@keyframes blink{
+50%{
+border-color:transparent;
+}
+}
+
+</style>
+
+</head>
+
+
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+
+html {
+    scroll-behavior: smooth;
+}
+    
+    body {
+      background: #000;
+      overflow-x: hidden;
+    }
+    
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 40px;
+}
+
+    .fire-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top, rgba(255, 80, 0, 0.45), transparent 40%),
+        radial-gradient(circle at bottom, rgba(255, 0, 0, 0.35), transparent 40%),
+        radial-gradient(circle at center, rgba(255, 170, 0, 0.15), transparent 45%);
+      z-index: 0;
+    }
+
+    .fire-glow {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(90px);
+      animation: pulse 4s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+
+      to {
+        transform: scale(1.2);
+        opacity: 0.9;
+      }
+    }
+
+    .flame {
+      position: absolute;
+      bottom: -50px;
+      width: 80px;
+      height: 160px;
+      background: linear-gradient(to top, #ff3c00, #ff9100, transparent);
+      border-radius: 50% 50% 20% 20%;
+      filter: blur(8px);
+      animation: flames 5s infinite ease-in-out;
+      opacity: 0.5;
+    }
+
+    @keyframes flames {
+      0% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-30px) scale(1.1);
+      }
+
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+
+      
+    }
+  </style>
+<body class="text-white font-sans">
+
+  <!-- BLURRED FIRE BACKGROUND -->
+<div class="fire-blur-bg"></div>
+
+  <!-- OVERLAY -->
+<div id="overlay" class="fixed inset-0 bg-black/60 hidden z-40"></div>
+
+<!-- IOS STYLE SIDE DRAWER -->
+<div id="side-menu"
+class="fixed top-0 right-0 h-full w-[80%] max-w-sm bg-black/90 backdrop-blur-xl 
+border-l border-red-500/20 shadow-2xl z-50 transform translate-x-full transition-transform duration-300">
+
+  <!-- HEADER -->
+  <div class="flex items-center justify-between p-6 border-b border-red-500/20">
+    <h2 class="text-red-500 font-bold text-xl">Menu</h2>
+    <button id="close-menu" class="text-white text-3xl">×</button>
+  </div>
+
+  <!-- LINKS -->
+  <div class="flex flex-col p-6 space-y-6 text-lg text-gray-300">
+
+    <a href="#home" class="hover:text-red-400 transition">Overview</a>
+    <a href="#about" class="hover:text-red-400 transition">About</a>
+    <a href="#features" class="hover:text-red-400 transition">Features</a>
+    <a href="#components" class="hover:text-red-400 transition">Components</a>
+    <a href="#benefits" class="hover:text-red-400 transition">Benefits</a>
+    <a href="#how-it-works" class="hover:text-red-400 transition">How It Works</a>
+    <a href="#prototype-demonstration" class="hover:text-red-400 transition">Prototype Demonstration</a>
+    <a href="#gallery" class="hover:text-red-400 transition">Gallery</a>
+    <a href="#contact" class="hover:text-red-400 transition">Contact</a>
+    <a href="#FAQS" class="hover:text-red-400 transition">FAQ</a>
+    <li><a href="#research" class="hover:text-red-400 transition">Research</a></li>
+
+  </div>
+
+</div>
+
+  <!-- ADD THIS RIGHT AFTER <body> -->
+
+<!-- LOADING SCREEN -->
+<div id="loader">
+
+<div class="loader-text">
+F.A.L.C.O.N
+</div>
+
+<p class="text-gray-400 mt-4">
+INITIALIZING SYSTEM...
+</p>
+
+</div>
+
+<!-- PARTICLES -->
+<div id="tsparticles"></div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+<img id="lightbox-img" src="">
+</div>
+
+  <div class="relative min-h-screen fire-bg overflow-hidden">
+
+    <!-- Fire Effects -->
+    <div class="fire-glow bg-red-600 w-96 h-96 top-0 left-0"></div>
+    <div class="fire-glow bg-orange-500 w-[500px] h-[500px] bottom-0 right-0"></div>
+
+    <div class="flame left-10"></div>
+    <div class="flame left-1/3"></div>
+    <div class="flame right-20"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-black/40 backdrop-blur-xl border-b border-red-500/10">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+           <div class="logo">
+        <img src="logo.png" alt="FALCON Logo">
+        <h1 class="text-2xl font-black text-red-500">F.A.L.C.O.N</h1>
+           </div>
+
+          <div>
+              <ul class="hidden md:flex gap-8 text-sm text-gray-300 font-medium">
+          <li><a href="#home" class="hover:text-red-400 transition">Overview</a></li>
+          <li><a href="#about" class="hover:text-red-400 transition">About</a></li>
+          <li><a href="#features" class="hover:text-red-400 transition">Features</a></li>
+          <li><a href="#components" class="hover:text-red-400 transition">Components</a></li>
+          <li><a href="#benefits" class="hover:text-red-400 transition">Benefits</a></li>
+          <li><a href="#how-it-works" class="hover:text-red-400 transition">How It Works</a></li>
+          <li><a href="#prototype-demonstration" class="hover:text-red-400 transition">Prototype Demonstration</a></li>
+          <li><a href="#gallery" class="hover:text-red-400 transition">Gallery</a></li>
+          <li><a href="#contact" class="hover:text-red-400 transition">Contact</a></li>
+          <li><a href="#FAQS" class="hover:text-red-400 transition">FAQ</a></li>    
+          <li><a href="#research" class="hover:text-red-400 transition">Research</a></li>
+
+        </ul>
+      </div>
+
+
+        <!-- BURGER BUTTON (MOBILE) -->
+        <button id="menu-btn" class="md:hidden text-red-500 text-3xl focus:outline-none  z-50">
+          ☰
+        </button>
+    
+      </div>
+
+      <!-- MOBILE MENU -->
+      <ul id="side-menu" class="hidden flex-col gap-4 text-xl text-gray-300 font-medium absolute top-full right-6 h-50 w-full bg-black/60 backdrop-blur-xl border-l border-red-500/20 px-6 py-10 text-center shadow-2xl z-">
+        <li><a href="#home" class="hover:text-red-400 transition">Overview</a></li>
+        <li><a href="#about" class="hover:text-red-400 transition">About</a></li>
+        <li><a href="#features" class="hover:text-red-400 transition">Features</a></li>
+        <li><a href="#benefits" class="hover:text-red-400 transition">Benefits</a></li>
+        <li><a href="#how-it-works" class="hover:text-red-400 transition">How It Works</a></li>
+        <li><a href="#gallery" class="hover:text-red-400 transition">Gallery</a></li>
+        <li><a href="#contact" class="hover:text-red-400 transition">Contact</a></li>
+        <li><a href="#FAQS" class="hover:text-red-400 transition">FAQ</a></li>
+      </ul>
+    </nav>
+
+
+    <!-- Hero Section -->
+    <section id="home" class="relative z-10 max-w-7xl mx-auto px-6 py-32 grid lg:grid-cols-2 gap-14 items-center">
+      <div>
+        <span class="inline-block px-5 py-2 rounded-full bg-red-600/20 border border-red-500/40 text-red-400 text-sm mb-6">
+          Advanced robotic fire safety system.
+        </span>
+
+        <h1 class="text-5xl lg:text-7xl font-black leading-tight mb-6">
+          F.A.L.C.O.N
+        </h1>
+
+        <p class="text-gray-300 text-lg leading-relaxed mb-8 max-w-xl">
+          Firefighting Autonomous Link-Controlled Operations Navigator — an intelligent robotic system designed to detect, monitor, and extinguish fires while reducing risks for firefighters and protecting hazardous environments.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a href="#about" class="bg-red-600 hover:bg-red-700 transition px-7 py-3 rounded-2xl font-semibold shadow-lg shadow-red-700/40 inline-block">
+            Explore Project
+          </a>
+ 
+          <a href="#prototype-demonstration" class="bg-red-600 hover:bg-red-700 transition px-7 py-3 rounded-2xl font-semibold shadow-lg shadow-red-700/40 inline-block">
+            Watch Demo
+          </a>
+        </div>
+      </div>
+
+      <div class="relative flex justify-center">
+        <div class="absolute w-80 h-80 bg-red-600/30 rounded-full blur-3xl"></div>
+
+        <div class="relative bg-black/60 border border-red-500/20 backdrop-blur-lg rounded-[2rem] p-8 shadow-2xl max-w-md">
+          <img src="finalrobot.png"
+            alt="FALCON"
+            class="rounded-2xl h-80 object-cover w-full"
+          />
+
+          <div class="grid grid-cols-3 gap-4 mt-6 text-center">
+            <div class="bg-red-950/50 rounded-xl p-4 border border-red-500/20">
+              <h3 class="text-2xl font-bold text-red-400">98%</h3>
+              <p class="text-gray-400 text-sm">Accuracy</p>
+            </div>
+
+            <div class="bg-red-950/50 rounded-xl p-4 border border-red-500/20">
+              <h3 class="text-2xl font-bold text-red-400">24/7</h3>
+              <p class="text-gray-400 text-sm">Monitoring</p>
+            </div>
+
+            <div class="bg-red-950/50 rounded-xl p-4 border border-red-500/20">
+              <h3 class="text-2xl font-bold text-red-400">AI</h3>
+              <p class="text-gray-400 text-sm">Powered</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+     <div data-aos="fade-up">
+    <section id="about" class="relative z-10 max-w-6xl mx-auto px-6 py-20">
+
+  <h2 class="text-4xl font-bold text-center mb-12" data-aos="fade-up">
+    About F.A.L.C.O.N
+  </h2>
+
+  <div class="grid md:grid-cols-3 gap-6">
+
+    <!-- OVERVIEW -->
+    <div class="bg-black/40 border border-red-500/20 rounded-3xl p-8 backdrop-blur-lg"
+         data-aos="slide-right">
+
+      <h3 class="text-2xl font-bold text-red-400 mb-4">Overview</h3>
+
+      <p class="text-gray-300 leading-7">
+        Firefighting robots represent a critical advancement in safety technology, designed to navigate hazardous environments and reduce fire risks without endangering human personnel. Our team is developing a robot that can detect, approach, and help extinguish fires using sensors, artificial intelligence, and autonomous navigation. This system is especially useful in dangerous settings such as industrial areas, factories, chemical laboratories, and other confined spaces where emergencies can become life-threatening.
+      </p>
+
+    </div>
+
+    <!-- MISSION -->
+    <div class="bg-black/40 border border-red-500/20 rounded-3xl p-8 backdrop-blur-lg"
+         data-aos="fade-up">
+
+      <h3 class="text-2xl font-bold text-red-400 mb-4">Mission</h3>
+
+      <p class="text-gray-300 leading-7">
+        We believe that improving firefighter safety is essential in every emergency response. Our mission is to create a robot that assists in fire suppression within hazardous and high-risk environments, helping reduce direct exposure to danger. By supporting firefighting operations through smart and reliable technology, we aim to enhance efficiency, protect lives, and contribute to safer and more effective emergency response systems.
+      </p>
+
+    </div>
+
+    <!-- TEAM -->
+    <div class="bg-black/40 border border-red-500/20 rounded-3xl p-8 backdrop-blur-lg"
+         data-aos="slide-left">
+
+      <h3 class="text-2xl font-bold text-red-400 mb-4">Team</h3>
+
+      <p class="text-gray-300 leading-7">
+        We are a dedicated group of students, developers, and innovators working together to design and build a functional firefighting robot. Each member contributes skills in research, programming, electronics, design, and problem-solving. United by a shared goal, our team collaborates to transform ideas into a practical solution that can help protect lives during fire emergencies.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+    <!-- Features -->
+     <section id="features" class="relative z-10 max-w-5xl mx-auto px-6 py-20 text-center">
+    <section class="relative z-10 max-w-7xl mx-auto px-6 py-20">
+      <div class="text-center mb-16" div data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-4">Features</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+          F.A.L.C.O.N combines autonomous robotics, fire detection systems, and real-time communication technology for fast and efficient emergency response.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <div class="bg-black/40 border border-red-500/20 hover:border-red-500 transition rounded-3xl p-6 backdrop-blur-lg"div data-aos="fade-up">
+          <div class="text-5xl mb-4" div data-aos="fade-up">🔥</div>
+          <h3 class="text-xl font-bold mb-3"> Fire Detection</h3>
+          <p class="text-gray-400">Detects fire quickly using advanced flame and smoke sensors.</p>
+        </div>
+
+        <div class="bg-black/40 border border-red-500/20 hover:border-red-500 transition rounded-3xl p-6 backdrop-blur-lg"div data-aos="fade-up">
+          <div class="text-5xl mb-4"div data-aos="fade-up">⚙</div>
+          <h3 class="text-xl font-bold mb-3"> Autonomous</h3>
+          <p class="text-gray-400">Can operate on its own without human control.</p>
+        </div>
+
+        <div class="bg-black/40 border border-red-500/20 hover:border-red-500 transition rounded-3xl p-6 backdrop-blur-lg"div data-aos="fade-up">
+          <div class="text-5xl mb-4"div data-aos="fade-up">🧯</div>
+          <h3 class="text-xl font-bold mb-3"> Fire Suppression</h3>
+          <p class="text-gray-400">Activates extinguishing mechanisms immediately after detecting fire.</p>
+        </div>
+          
+        <div class="bg-black/40 border border-red-500/20 hover:border-red-500 transition rounded-3xl p-6 backdrop-blur-lg"div data-aos="fade-up">
+          <div class="text-5xl mb-4"div data-aos="fade-up">📡</div>
+          <h3 class="text-xl font-bold mb-3"> Obstacle Detection</h3>
+          <p class="text-gray-400">Detects Obstacles by using ultra sonic sensor, and autonomously maneuver to prevent collisions.</p>
+        </div>
+          
+      </div>
+    </section>
+
+
+<!-- COMPONENTS -->
+<section id="components" class="relative z-10 max-w-7xl mx-auto px-6 py-20">
+
+  <div class="text-center mb-16" div data-aos="fade-up">
+    <h2 class="text-4xl font-bold mb-4">Robot Components</h2>
+    <p class="text-gray-400 max-w-2xl mx-auto">
+      Key hardware components used to build F.A.L.C.O.N and enable its autonomous fire detection and suppression system.
+    </p>
+  </div>
+
+ <!-- ARDUINO UNO -->
+<div onclick="openModal('Microcontroller')" 
+class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg hover:border-red-500 hover:scale-105 transition cursor-pointer" div data-aos="slide-left">
+
+  <img src="arduinouno.png" 
+       class="w-20 h-20 mx-auto mb-4 object-contain"
+       alt="Arduino Uno">
+
+  <h3 class="text-xl font-bold mb-3 text-red-400">
+    Arduino Uno
+  </h3>
+
+  <p class="text-gray-400 mb-5">
+    The Arduino Uno is a microcontroller board based on the ATmega328P designed to read inputs and control outputs.
+  </p>
+
+  <a href="https://shopee.ph/search?keyword=arduino%20uno"
+     target="_blank"
+     onclick="event.stopPropagation()"
+     class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl text-white font-semibold transition">
+     🛒 Buy 
+  </a>
+
+</div>
+
+<!-- FLAME SENSOR -->
+<div onclick="openModal('flame')" 
+class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg hover:border-red-500 hover:scale-105 transition cursor-pointer" div data-aos="slide-right">
+
+  <img src="flamesensor.jpg" 
+       class="w-20 h-20 mx-auto mb-4 object-contain"
+       alt="Flame Sensor">
+
+  <h3 class="text-xl font-bold mb-3 text-red-400">
+    Flame Sensor
+  </h3>
+
+  <p class="text-gray-400 mb-5">
+    Detects fire sources in real time using infrared radiation sensing technology.
+  </p>
+
+  <a href="https://shopee.ph/search?keyword=flame%20sensor"
+     target="_blank"
+     onclick="event.stopPropagation()"
+     class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl text-white font-semibold transition">
+     🛒 Buy
+  </a>
+
+</div>
+
+<!-- ULTRASONIC SENSOR -->
+<div onclick="openModal('sensor')" 
+class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg hover:border-red-500 hover:scale-105 transition cursor-pointer"div data-aos="slide-left">
+
+  <img src="ultrasonicsensor.jpg" 
+       class="w-20 h-20 mx-auto mb-4 object-contain"
+       alt="Ultrasonic Sensor">
+
+  <h3 class="text-xl font-bold mb-3 text-red-400">
+    Ultrasonic Sensor
+  </h3>
+
+  <p class="text-gray-400 mb-5">
+    Measures distance and detects obstacles using ultrasonic sound waves and echo detection.
+  </p>
+
+  <a href="https://shopee.ph/search?keyword=ultrasonic%20sensor"
+     target="_blank"
+     onclick="event.stopPropagation()"
+     class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl text-white font-semibold transition">
+     🛒 Buy
+  </a>
+
+</div>
+
+<!-- SERVO MOTOR -->
+<div onclick="openModal('servomotor')" 
+class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg hover:border-red-500 hover:scale-105 transition cursor-pointer"div data-aos="slide-right">
+
+  <img src="servomotor1.jpg" 
+       class="w-20 h-20 mx-auto mb-4 object-contain"
+       alt="Servo Motor">
+
+  <h3 class="text-xl font-bold mb-3 text-red-400">
+    Servo Motor (MG995)
+  </h3>
+
+  <p class="text-gray-400 mb-5">
+    A rotary actuator that controls directional movement with precise angular positioning.
+  </p>
+
+  <a href="https://shopee.ph/search?keyword=mg995%20servo%20motor"
+     target="_blank"
+     onclick="event.stopPropagation()"
+     class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl text-white font-semibold transition">
+     🛒 Buy
+  </a>
+
+</div>
+
+<!-- LI-ION BATTERY -->
+<div onclick="openModal('battery')" 
+class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg hover:border-red-500 hover:scale-105 transition cursor-pointer"div data-aos="slide-left">
+
+  <img src="battery.jpg" 
+       class="w-20 h-20 mx-auto mb-4 object-contain"
+       alt="Li-Ion Battery">
+
+  <h3 class="text-xl font-bold mb-3 text-red-400">
+    Li-Ion Batteries
+  </h3>
+
+  <p class="text-gray-400 mb-5">
+    Rechargeable lithium-ion batteries that power the robot’s logic and motor systems.
+  </p>
+
+  <a href="https://shopee.ph/search?keyword=18650%20li-ion%20battery"
+     target="_blank"
+     onclick="event.stopPropagation()"
+     class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl text-white font-semibold transition">
+     🛒 Buy 
+  </a>
+
+</div>
+
+<!-- DC MOTOR -->
+<div onclick="openModal('motors')" 
+class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg hover:border-red-500 hover:scale-105 transition cursor-pointer"div data-aos="slide-right">
+
+  <img src="dcmotor.png" 
+       class="w-20 h-20 mx-auto mb-4 object-contain"
+       alt="DC Motor">
+
+  <h3 class="text-xl font-bold mb-3 text-red-400">
+    DC Motors
+  </h3>
+
+  <p class="text-gray-400 mb-5">
+    Converts electrical energy into mechanical motion for robot mobility and movement.
+  </p>
+
+  <a href="https://shopee.ph/search?keyword=dc%20motor"
+     target="_blank"
+     onclick="event.stopPropagation()"
+     class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl text-white font-semibold transition">
+     🛒 Buy 
+  </a>
+
+</div>
+
+<!-- FIRE EXTINGUISHER -->
+<div onclick="openModal('fireextinguisher')" 
+class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg hover:border-red-500 hover:scale-105 transition cursor-pointer"div data-aos="slide-left">
+
+  <img src="fireextinguisher.jpg" 
+       class="w-20 h-20 mx-auto mb-4 object-contain"
+       alt="Fire Extinguisher">
+
+  <h3 class="text-xl font-bold mb-3 text-red-400">
+    Fire Suppression System
+  </h3>
+
+  <p class="text-gray-400 mb-5">
+    Provides immediate fire suppression response by spraying extinguishing agents automatically.
+  </p>
+
+  <a href="https://shopee.ph/search?keyword=mini%20fire%20extinguisher"
+     target="_blank"
+     onclick="event.stopPropagation()"
+     class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 px-5 py-2 rounded-xl text-white font-semibold transition">
+     🛒 Buy 
+  </a>
+
+</div>
+
+    <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 backdrop-blur-lg hover:border-red-500 transition" div data-aos="slide-right">
+      <div class="text-5xl mb-4"></div>
+      <h3 class="text-xl font-bold mb-3">Control System</h3>
+      <p class="text-gray-400">Manages Master–Slave communication and manual override functions.</p>
+    </div>
+
+  </div>
+</section>
+
+
+    <!-- Benefits-->
+    <section id="benefits" class="relative z-10 bg-black/40 border-y border-red-500/10 backdrop-blur-lg" div data-aos="fade-up">
+      <div class="max-w-7xl mx-auto px-6 py-20" div data-aos="fade-up">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl font-bold mb-4">Benefits</h2>
+          <p class="text-gray-400">Designed to improve fire safety, reduce human risk, and protect critical environments.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-6" div data-aos="fade-up">
+
+          <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 backdrop-blur-lg hover:border-red-500 transition hover:-translate-y-2" div data-aos="fade-up">
+            <div class="text-5xl mb-4">🧑‍🚒</div>
+            <h3 class="text-lg font-bold text-red-400 mb-3">Reduce Risk</h3>
+            <p class="text-gray-400">Reduces risks for firefighters during dangerous fire emergencies.</p>
+          </div>
+
+          <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 backdrop-blur-lg hover:border-red-500 transition hover:-translate-y-2" div data-aos="fade-up">
+            <div class="text-5xl mb-4">💻</div>
+            <h3 class="text-lg font-bold text-red-400 mb-3">Equipment Protection</h3>
+            <p class="text-gray-400">Protects sensitive equipment from severe fire and water damage.</p>
+          </div>
+
+          <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 backdrop-blur-lg hover:border-red-500 transition hover:-translate-y-2" div data-aos="fade-up">
+            <div class="text-5xl mb-4">⚡</div>
+            <h3 class="text-lg font-bold text-red-400 mb-3">Fast Response</h3>
+            <p class="text-gray-400">Detects and extinguishes fires quickly before they spread.</p>
+          </div>
+
+          <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 backdrop-blur-lg hover:border-red-500 transition hover:-translate-y-2" div data-aos="fade-up">
+            <div class="text-5xl mb-4">🏭</div>
+            <h3 class="text-lg font-bold text-red-400 mb-3">High-Risk Areas</h3>
+            <p class="text-gray-400">Works efficiently in laboratories, server rooms, and hazardous facilities.</p>
+          </div>
+
+          <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 backdrop-blur-lg hover:border-red-500 transition hover:-translate-y-2" div data-aos="fade-up">
+            <div class="text-5xl mb-4">✋</div>
+            <h3 class="text-lg font-bold text-red-400 mb-3">Manual Control</h3>
+            <p class="text-gray-400">Allows manual operation whenever needed.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="relative z-10 max-w-7xl mx-auto px-6 py-20">
+      <div class="text-center mb-16" div data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-4">How It Works</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">
+          F.A.L.C.O.N follows a smart automated process to detect and extinguish fires efficiently.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg" div data-aos="slide-right">
+          <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-5">1</div>
+          <h3 class="text-red-400 text-xl font-bold mb-3">Flame Detection and Response Priority</h3>
+          <p class="text-gray-400">
+              <li><a>When F.A.L.C.O.N. detects a flame, it prioritizes moving toward it over patrolling and stops at a safe distance of 11–20 cm from the fire source.
+              </a></li>   
+          </p>
+        </div>
+
+        <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg"div data-aos="slide-left">
+          <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-5">2</div>
+          <h3 class="text-red-400 text-xl font-bold mb-3"> Fire Extinguishing Mechanism</h3>
+          <p class="text-gray-400">
+              <li><a>Once in position, the robot activates its fire suppression system using an MG995 servo (rotating 18°–27°) to trigger and direct the extinguisher spray toward the flame while maintaining a safe operating distance.
+              </a></li>
+          </p>
+        </div>
+
+        <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg"div data-aos="slide-right">
+          <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-5">3</div>
+          <h3 class="text-red-400 text-xl font-bold mb-3">Power System</h3>
+          <p class="text-gray-400">
+              <li><a>
+                  The F.A.L.C.O.N. uses two separate 18650 Li-Ion battery packs, with a 2-cell pack powering sensors and control systems and a 3-cell pack powering the motors, and is fully rechargeable with the extinguisher placed for easy refilling.
+              </a></li>
+          </p>
+        </div>
+
+        <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg"div data-aos="slide-left">
+          <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-5">4</div>
+          <h3 class="text-red-400 text-xl font-bold mb-3">Dual-Control System (Master–Slave Architecture)</h3>
+          <p class="text-gray-400">
+              <li><a>
+                  The Master system processes sensor data (flame detection and ultrasonic obstacle avoidance) and controls the servo for fire response, while the Slave system handles all movement functions and operates only under Master instructions.
+              </a></li>
+          </p>
+        </div>
+          
+        <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg"div data-aos="slide-right">
+          <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-5">5</div>
+          <h3 class="text-red-400 text-xl font-bold mb-3">Dual System Behavior</h3>
+          <p class="text-gray-400">
+              <li><a>
+                  The robot operates with parallel roles where the Master handles sensing and decision-making while the Slave executes movement commands, and the Slave cannot function independently without Master input.
+              </a></li>
+          </p>
+        </div>
+          
+        <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 text-center backdrop-blur-lg"div data-aos="slide-left">
+          <div class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto text-2xl font-bold mb-5">6</div>
+          <h3 class="text-red-400 text-xl font-bold mb-3">Manual Override Mode</h3>
+          <p class="text-gray-400">
+              <li><a>
+                  The system allows manual override by connecting directly to both Master and Slave systems, enabling independent or combined control while still allowing the Master to automatically trigger fire suppression when a flame is detected.
+              </a></li>
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+<!-- DEMO VIDEO -->
+<section id="prototype-demonstration" class="relative z-10 max-w-6xl mx-auto px-6 py-20">
+
+  <div class="text-center mb-10" div data-aos="fade-up">
+    <h2 class="text-4xl font-bold mb-4">Prototype Demonstration</h2>
+
+    <p class="text-gray-400 max-w-2xl mx-auto">
+      Watch F.A.L.C.O.N in action as it detects, approaches, and extinguishes fire autonomously.
+    </p>
+  </div>
+
+  <div class="bg-black/40 border border-red-500/20 rounded-3xl overflow-hidden backdrop-blur-lg shadow-2xl" div data-aos="fade-up">
+
+    <video 
+      class="w-full h-auto"
+      controls
+      autoplay
+      muted
+      loop
+    >
+      <source src="Falcon-demo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+  </div>
+
+</section>
+
+
+    <!-- GALLERY -->
+    <section id="gallery" class="relative z-10 max-w-7xl mx-auto px-6 py-20">
+      <div class="text-center mb-16" div data-aos="fade-up">
+        <h2 class="text-4xl font-bold mb-4">Gallery</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6" div data-aos="fade-up">
+<img src="robot1.jpg" onclick="openLightbox(this.src)" class="rounded-3xl border border-red-500/20 h-72 object-cover w-full" alt="Robot Image 1">
+
+<img src="falcon1.jpg" onclick="openLightbox(this.src)" class="rounded-3xl border border-red-500/20 h-72 object-cover w-full" alt="Robot Image 2">
+
+<img src="robot3.2.jpg" onclick="openLightbox(this.src)" class="rounded-3xl border border-red-500/20 h-72 object-cover w-full" alt="Robot Image 3">
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
+      <h2 class="text-4xl font-bold mb-8">Contact Us</h2>
+
+      <div class="bg-black/40 border border-red-500/20 rounded-3xl p-6 sm:p-10 backdrop-blur-lg w-full max-w-md mx-auto" div data-aos="fade-up">
+  <p class="text-base sm:text-lg text-gray-300 mb-4 break-words">
+    📧 falcon.operationsnavigator@gmail.com
+  </p>
+  <p class="text-base sm:text-lg text-gray-300 break-words">
+    📘 Falcon Navigator
+  </p>
+</div>
+    </section>
+
+
+<!-- FAQ SECTION -->
+<section id="FAQS" class="relative z-10 max-w-5xl mx-auto px-6 py-20">
+
+    <div class="text-center mb-16" div data-aos="fade-up">
+
+        <h2 class="text-4xl font-bold mb-4">
+            Frequently Asked Questions
+        </h2>
+
+        <p class="text-gray-400 max-w-2xl mx-auto">
+            Common questions about the F.A.L.C.O.N firefighting robotic system.
+        </p>
+
+    </div>
+
+    <!-- FAQ CONTAINER -->
+    <div class="space-y-6" div data-aos="fade-up">
+
+    </div> 
+
+
+    <!-- ASK A QUESTION FORM  -->
+    <div class="mt-12 bg-black/40 border border-red-500/20 rounded-3xl p-8 backdrop-blur-lg" div data-aos="fade-up">
+
+        <h3 class="text-2xl font-bold text-center mb-4">Have More Questions?</h3>
+        <p class="text-gray-400 text-center mb-6">
+            Send us your question and we’ll get back to you.
+        </p>
+
+        <form action="https://formspree.io/f/xojrrvwd" method="POST" class="space-y-4">
+              
+           <input 
+               type="email" 
+               name="email"
+               placeholder="Your email address"
+               class="w-full p-2.5 rounded-sm bg-black/60 border border-red-500/20 focus:border-red-500 outline-none text-white"
+               required
+           />
+
+            <input 
+                type="text" 
+                name="question"
+                placeholder="Enter your question here..."
+                class="w-full p-2.5 rounded-sm bg-black/60 border border-red-500/20 focus:border-red-500 outline-none text-white"
+                required
+            />
+
+            <textarea 
+                name="message"
+                placeholder="Optional message..."
+                class="w-full p-2.5 rounded-sm bg-black/60 border border-red-500/20 focus:border-red-500 outline-none text-white h-32"
+            ></textarea>
+            
+            <input type="hidden" name="_subject" value="New F.A.L.C.O.N FAQ Question">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="thankyou.html">
+
+            <input type="hidden" name="_replyto" value="falcon.operationsnavigator@gmail.com">
+
+            <button 
+                type="submit"
+                class="w-full bg-red-600 hover:bg-red-700 transition py-2.5 rounded-lg font-semibold shadow-lg shadow-red-700/40"
+            >
+                Send Question
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+        <!-- FAQ ITEM -->
+        <div class="faq-item border-b border-red-500/30 pb-6" div data-aos="fade-up">
+
+            <button class="faq-question w-full flex justify-between items-center text-left">
+
+                <span class="text-2xl font-light">
+                    How does F.A.L.C.O.N detect fire?
+                </span>
+
+                <span class="text-4xl transition-transform duration-300">
+                    ⌄
+                </span>
+
+            </button>
+
+            <!-- ANSWER -->
+            <div class="faq-answer hidden mt-5 bg-black/40 border border-red-500/20 rounded-2xl p-6 backdrop-blur-lg text-gray-300 leading-8" div data-aos="fade-up">
+
+                F.A.L.C.O.N uses advanced flame and smoke sensors to quickly identify fire sources and respond automatically.
+
+            </div>
+
+        </div>
+
+        <!-- FAQ ITEM -->
+        <div class="faq-item border-b border-red-500/30 pb-6" div data-aos="fade-up">
+
+            <button class="faq-question w-full flex justify-between items-center text-left">
+
+                <span class="text-2xl font-light">
+                    Can the robot work without human control?
+                </span>
+
+                <span class="text-4xl transition-transform duration-300">
+                    ⌄
+                </span>
+
+            </button>
+
+            <div class="faq-answer hidden mt-5 bg-black/40 border border-red-500/20 rounded-2xl p-6 backdrop-blur-lg text-gray-300 leading-8" div data-aos="fade-up">
+
+                Yes. The system is capable of autonomous navigation, fire detection, and suppression without direct human operation.
+
+            </div>
+
+        </div>
+
+        <!-- FAQ ITEM -->
+        <div class="faq-item border-b border-red-500/30 pb-6" div data-aos="fade-up">
+
+            <button class="faq-question w-full flex justify-between items-center text-left">
+
+                <span class="text-2xl font-light">
+                    What environments can it operate in?
+                </span>
+
+                <span class="text-4xl transition-transform duration-300">
+                    ⌄
+                </span>
+
+            </button>
+
+            <div class="faq-answer hidden mt-5 bg-black/40 border border-red-500/20 rounded-2xl p-6 backdrop-blur-lg text-gray-300 leading-8">
+
+                F.A.L.C.O.N is designed for hazardous areas such as laboratories, factories, server rooms, and confined spaces.
+
+            </div>
+
+<!-- RESEARCH PAPER + SOCIALS -->
+<section id="research" class="relative z-10 max-w-5xl mx-auto px-6 py-20">
+
+  <div class="text-center mb-12" data-aos="fade-up">
+
+    <h2 class="text-4xl font-bold mb-4">
+      Research Paper & Socials
+    </h2>
+
+    <p class="text-gray-400 max-w-2xl mx-auto">
+      View and download the official F.A.L.C.O.N research paper and connect with us through social media.
+    </p>
+
+  </div>
+
+  <!-- CENTER FIX -->
+  <div class="flex justify-center">
+
+    <!-- CARD -->
+    <div class="w-full max-w-md bg-black/40 border border-red-500/20 rounded-3xl p-8 backdrop-blur-lg hover:border-red-500 transition hover:scale-105">
+
+      <div class="text-6xl mb-6 text-center">
+        📄
+      </div>
+
+      <h3 class="text-2xl font-bold text-red-400 mb-4 text-center">
+        Research Paper
+      </h3>
+
+      <p class="text-gray-400 text-center mb-6">
+        Download and read the official F.A.L.C.O.N research documentation and study paper.
+      </p>
+
+      <div class="flex justify-center">
+
+        <a href="falconresearch.docx"
+           download
+           target="_blank"
+           class="inline-flex items-center gap-3 bg-red-600 hover:bg-red-700 transition px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-red-700/40">
+
+          ⬇ Download Paper
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+        </div>
+
+        </div>
+
+    </div>
+
+</section>
+       
+<!-- FAQ SCRIPT -->
+<script>
+
+const faqItems = document.querySelectorAll(".faq-item");
+
+faqItems.forEach(item => {
+
+    const btn = item.querySelector(".faq-question");
+    const answer = item.querySelector(".faq-answer");
+    const icon = item.querySelector("span:last-child");
+
+    btn.addEventListener("click", () => {
+        answer.classList.toggle("hidden");
+
+        // optional rotate icon
+        icon.classList.toggle("rotate-180");
+    });
+});
+</script>
+
+
+
+    </div>
+    
+
+    <!-- Footer -->
+    <footer class="relative z-10 py-10 text-center border-t border-red-500/10">
+      <h3 class="text-3xl font-black text-red-500"> FALCON </h3>
+       <p>© 2026 F.A.L.C.O.N. All rights reserved.</p>
+      <p class="text-gray-500 mt-2"></p>
+    </footer>
+
+  </div>
+
+  <!-- 3D MODAL VIEWER -->
+<div id="modal"
+class="hidden fixed inset-0 bg-black/90 flex items-center justify-center z-50">
+
+  <div class="relative max-w-3xl w-full p-6">
+
+    <!-- CLOSE BUTTON -->
+    <button onclick="closeModal()"
+      class="absolute top-2 right-4 text-white text-4xl hover:text-red-500 z-50">
+      ×
+    </button>
+
+    <!-- CARD -->
+    <div class="bg-black border border-red-500/30 rounded-3xl p-8 text-center">
+
+      <h2 id="modal-title"
+      class="text-3xl font-bold text-red-400 mb-6"></h2>
+
+      <!-- 3D IMAGE CONTAINER -->
+      <div class="perspective-[1500px] flex justify-center">
+
+        <div id="card3d"
+        class="transition-transform duration-200 cursor-grab active:cursor-grabbing">
+
+          <img id="modal-image"
+          src=""
+          class="w-80 h-80 object-contain rounded-3xl shadow-2xl shadow-red-500/30 border border-red-500/20">
+
+        </div>
+
+      </div>
+
+      <p id="modal-text"
+      class="text-gray-300 mt-6 leading-7"></p>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+const modal = document.getElementById("modal");
+const title = document.getElementById("modal-title");
+const text = document.getElementById("modal-text");
+const image = document.getElementById("modal-image");
+const card = document.getElementById("card3d");
+
+function openModal(type) {
+
+  modal.classList.remove("hidden");
+
+  // ARDUINO
+  if(type === "Microcontroller") {
+
+    title.innerText = "Arduino Uno";
+
+    image.src = "arduinouno.png";
+  }
+
+  // FLAME SENSOR
+  if(type === "flame") {
+
+    title.innerText = "Flame Sensor";
+
+    image.src = "flamesensor.jpg";
+  }
+
+    // ULTRASONIC SENSOR
+  if(type === "sensor") {
+
+    title.innerText = "Ultrasonic Sensor";
+
+    image.src = "ultrasonicsensor.jpg";
+  }
+
+    // SERVO MOTOR
+  if(type === "servomotor") {
+
+    title.innerText = "Servo Motor";
+
+    image.src = "servomotor1.jpg";
+  }
+
+    // LI-ION BATTERIES
+  if(type === "battery") {
+
+    title.innerText = "LI-ION Batteries";
+
+    image.src = "battery.jpg";
+  }
+
+    // MOTORS
+  if(type === "motors") {
+
+    title.innerText = "Direct Current Motors";
+
+    image.src = "dcmotor.png";
+  }
+
+    // FIRE EXTINGUISHER
+  if(type === "fireextinguisher") {
+
+    title.innerText = "Fire Extinguisher";
+
+    image.src = "fireextinguisher.jpg";
+  }
+
+
+}
+
+function closeModal() {
+  modal.classList.add("hidden");
+
+  // reset rotation
+  card.style.transform =
+  "rotateY(0deg) rotateX(0deg)";
+}
+
+// CLICK OUTSIDE TO CLOSE
+modal.addEventListener("click", (e) => {
+
+  if(e.target === modal) {
+    closeModal();
+  }
+
+});
+
+</script>
+
+<script>
+function openLightbox(src) {
+  const lightbox = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-img");
+
+  img.src = src;
+  lightbox.style.display = "flex";
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").style.display = "none";
+}
+</script>
+
+<script>
+window.addEventListener("load", () => {
+  const loader = document.getElementById("loader");
+
+  // minimum time (2 seconds)
+  const minLoadTime = 2000;
+  const start = Date.now();
+
+  const hideLoader = () => {
+    loader.style.opacity = "0";
+    setTimeout(() => {
+      loader.style.display = "none";
+    }, 800);
+  };
+
+  const elapsed = Date.now() - start;
+
+  if (elapsed < minLoadTime) {
+    setTimeout(hideLoader, minLoadTime - elapsed);
+  } else {
+    hideLoader();
+  }
+});
+</script>
+
+<script>
+const menuBtn = document.getElementById("menu-btn");
+const menu = document.getElementById("side-menu");
+const overlay = document.getElementById("overlay");
+const closeBtn = document.getElementById("close-menu");
+
+// OPEN MENU
+function openMenu() {
+  menu.classList.remove("translate-x-full");
+  overlay.classList.remove("hidden");
+}
+
+// CLOSE MENU
+function closeMenu() {
+  menu.classList.add("translate-x-full");
+  overlay.classList.add("hidden");
+}
+
+// EVENTS
+menuBtn.addEventListener("click", openMenu);
+closeBtn.addEventListener("click", closeMenu);
+overlay.addEventListener("click", closeMenu);
+
+// ✅ AUTO CLOSE WHEN CLICKING LINKS
+document.querySelectorAll("#side-menu a").forEach(link => {
+  link.addEventListener("click", closeMenu);
+});
+</script>
+
+<script>
+  AOS.init({
+    duration: 900,
+    once: true,
+    offset: 120
+  });
+</script>
+
+</body>
+</html>
